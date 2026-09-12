@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>House Price Predictor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">SYS-304 · Milestone 2</p>
+      <h1>House Price Predictor</h1>
+      <p class="lede">
+        Enter key Ames housing features, send them to the model API, and get an estimated sale price.
+      </p>
+    </header>
+
+    <section class="panel">
+      <div class="toolbar">
+        <button type="button" id="load-sample" class="secondary">Load sample house</button>
+        <button type="button" id="clear-form" class="secondary">Clear</button>
+      </div>
+
+      <form id="predict-form">
+        <div class="grid">
+          <label>
+            Overall quality (1–10)
+            <input id="OverallQual" name="OverallQual" type="number" min="1" max="10" value="7" required />
+          </label>
+          <label>
+            Overall condition (1–10)
+            <input id="OverallCond" name="OverallCond" type="number" min="1" max="10" value="5" required />
+          </label>
+          <label>
+            Living area (sq ft)
+            <input id="GrLivArea" name="GrLivArea" type="number" min="0" value="1710" required />
+          </label>
+          <label>
+            Lot area (sq ft)
+            <input id="LotArea" name="LotArea" type="number" min="0" value="8450" required />
+          </label>
+          <label>
+            Year built
+            <input id="YearBuilt" name="YearBuilt" type="number" min="1800" max="2025" value="2003" required />
+          </label>
+          <label>
+            Total basement SF
+            <input id="TotalBsmtSF" name="TotalBsmtSF" type="number" min="0" value="856" required />
+          </label>
+          <label>
+            Garage cars
+            <input id="GarageCars" name="GarageCars" type="number" min="0" max="5" value="2" required />
+          </label>
+          <label>
+            Full baths
+            <input id="FullBath" name="FullBath" type="number" min="0" max="5" value="2" required />
+          </label>
+          <label>
+            Neighborhood
+            <select id="Neighborhood" name="Neighborhood">
+              <option value="CollgCr">CollgCr</option>
+              <option value="NridgHt">NridgHt</option>
+              <option value="OldTown">OldTown</option>
+              <option value="Edwards">Edwards</option>
+              <option value="Somerst">Somerst</option>
+              <option value="NAmes">NAmes</option>
+            </select>
+          </label>
+          <label>
+            Zoning
+            <select id="MSZoning" name="MSZoning">
+              <option value="RL">RL</option>
+              <option value="RM">RM</option>
+              <option value="FV">FV</option>
+              <option value="RH">RH</option>
+              <option value="C (all)">C (all)</option>
+            </select>
+          </label>
+          <label>
+            Kitchen quality
+            <select id="KitchenQual" name="KitchenQual">
+              <option value="Ex">Excellent</option>
+              <option value="Gd" selected>Good</option>
+              <option value="TA">Typical</option>
+              <option value="Fa">Fair</option>
+            </select>
+          </label>
+          <label>
+            Exterior quality
+            <select id="ExterQual" name="ExterQual">
+              <option value="Ex">Excellent</option>
+              <option value="Gd" selected>Good</option>
+              <option value="TA">Typical</option>
+              <option value="Fa">Fair</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" id="predict-btn">Predict sale price</button>
+      </form>
+
+      <div id="status" class="status" aria-live="polite"></div>
+      <div id="result" class="result hidden">
+        <p class="result-label">Predicted SalePrice</p>
+        <p id="sale-price" class="sale-price"></p>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
