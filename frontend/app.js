@@ -1,7 +1,4 @@
-const API = window.API_BASE || (
-  // When served from docker-compose (port 3000), nginx proxies /api -> backend.
-  window.location.port === "3000" ? `${window.location.origin}/api` : "http://localhost:8000"
-);
+const API = window.API_BASE || "http://localhost:8000";
 
 const form = document.getElementById("predict-form");
 const statusEl = document.getElementById("status");
