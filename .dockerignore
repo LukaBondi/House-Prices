@@ -1,0 +1,17 @@
+.git
+.pytest_cache
+.ruff_cache
+__pycache__
+**/__pycache__
+**/*.pyc
+dataset/
+model_training/
+tests/
+benchmarks/
+report/
+output/
+tmp/
+*.ipynb
+models/*
+!models/house_prices_native.zip
+!models/feature_schema.json

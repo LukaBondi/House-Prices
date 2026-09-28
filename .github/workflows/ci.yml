@@ -30,12 +30,14 @@ jobs:
       - name: Ensure model artifact exists
         run: |
           if [ ! -f models/baseline_xgb_pipeline.pkl ]; then
-            python model_training/train_baseline.py
+            echo "Frozen baseline artifact is missing from the checkout." >&2
+            exit 1
           fi
+          python -m model_training.export_native
 
       - name: Lint with ruff
         run: |
-          ruff check backend tests model_training/train_baseline.py
+          ruff check backend tests model_training/*.py
 
       - name: Run tests
         env:

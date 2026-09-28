@@ -13,3 +13,4 @@ venv/
 Thumbs.db
 .cursor/
 .vscode/
+tmp/

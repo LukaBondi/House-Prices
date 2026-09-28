@@ -6,10 +6,20 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/app/models:ro
+      - ./models/house_prices_native.zip:/app/models/house_prices_native.zip:ro
+      - ./models/feature_schema.json:/app/models/feature_schema.json:ro
     environment:
-      MODEL_PATH: /app/models/baseline_xgb_pipeline.pkl
+      MODEL_PATH: /app/models/house_prices_native.zip
       SCHEMA_PATH: /app/models/feature_schema.json
+      WEB_CONCURRENCY: "1"
+      PREDICTION_CACHE_ENABLED: "1"
+      PREDICTION_CACHE_MAX_ENTRIES: "1024"
+      PREDICTION_CACHE_TTL_SECONDS: "300"
+      DYNAMIC_BATCHING_ENABLED: "0"
+      BATCH_MAX_SIZE: "16"
+      BATCH_MAX_DELAY_MS: "0"
+      BATCH_QUEUE_MAX_SIZE: "256"
+      INFERENCE_WORKERS: "1"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
       interval: 10s

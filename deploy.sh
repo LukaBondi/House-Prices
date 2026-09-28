@@ -11,17 +11,19 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 
 if [ ! -f models/baseline_xgb_pipeline.pkl ]; then
-  echo "Model artifact missing. Training baseline model..."
-  if command -v conda >/dev/null 2>&1; then
-    # Prefer course conda env when available.
-    if conda env list | grep -qE '^sys-304\s'; then
-      conda run -n sys-304 python model_training/train_baseline.py
-    else
-      python model_training/train_baseline.py
-    fi
+  echo "Frozen baseline model is missing. Restore models/baseline_xgb_pipeline.pkl from the repository before deploying." >&2
+  exit 1
+fi
+
+echo "Exporting the frozen Phase 2 model to the native runtime artifact..."
+if command -v conda >/dev/null 2>&1; then
+  if conda env list | grep -qE '^sys-304\s'; then
+    conda run -n sys-304 python -m model_training.export_native
   else
-    python model_training/train_baseline.py
+    python -m model_training.export_native
   fi
+else
+  python -m model_training.export_native
 fi
 
 echo "Building and starting services..."
