@@ -103,15 +103,6 @@ Left for later on purpose: hyperparameter search, hand-crafted features
 (total SF, age, interactions), other model families (LightGBM / NN), modeling
 `log1p(SalePrice)` directly, and cross-validation instead of a single split.
 
-### Layout choice (no `src/`)
-
-Keep **domain folders at repo root** (`model_training/`, `backend/`,
-`frontend/`, `dataset/`, `models/`, `tests/`) rather than nesting everything
-under `src/`. For this course project that maps 1:1 to assignment deliverables
-(API vs UI vs Docker vs training) and avoids an empty outer package layer.
-Revisit `src/` only if the Python package surface grows enough that imports
-become painful.
-
 ---
 
 ## Milestone 2 — Deploying the model service
@@ -204,19 +195,48 @@ cloud deploy.
 
 ---
 
-## Later milestones
+## Milestone 3: Architectural scaling and optimization
 
-_Append new design decisions below as work continues._
+**Current design (2026-09-27).** The service keeps the fitted Phase 2 model and feature schema unchanged. This milestone changes model serialization and inference execution; it does not train a smaller model.
 
-<!-- Example:
-## Milestone 3 — <title>
+### Model Optimizations
 
-### <topic>
-- **Decision** — reason
--->
+1. **Native XGBoost format (UBJ).** The frozen booster is exported to XGBoost's native UBJ format and loaded through its native prediction API.
+2. **Fused preprocessing.** The serving code applies the fitted imputation and category mappings, builds sparse CSR input, and sends it directly to the booster. This removes pandas, scikit-learn, and joblib from the inference path.
+
+These techniques target inference time and runtime dependencies. They do not change the learned weights. The project did not use quantization, distillation, or pruning. Export checks prediction parity with the frozen pipeline across 2,919 dataset rows and edge cases; the maximum prediction difference was zero.
+
+| Model measurement | Phase 2 pipeline | Native inference |
+|---|---:|---:|
+| One-row p50 latency | 22.13 ms | 0.53 ms |
+| 64-row p50 latency | 23.82 ms | 4.50 ms |
+
+The native archive is 95,850 B. The original uncompressed Phase 2 file is 492,927 B, but an equally compressed baseline is 102,904 B. The fair size difference is only 7,054 B (about 6.9 KiB), so this is not a meaningful model-weight compression result. Full accuracy, memory, and benchmark details are in [report/phase3_report.md](report/phase3_report.md).
+
+### System Optimizations
+
+1. **Exact-input TTL/LRU cache with in-flight coalescing.** Enabled by default. It avoids repeat inference and shares work for simultaneous identical requests. Cache state is local to one API process.
+2. **Bounded dynamic batching.** Implemented as an optional queue, with a maximum batch of 16 rows and capacity of 256. It is disabled by default because the measured ablation reduced throughput; it is not claimed as a default performance improvement.
+
+Compose uses one Uvicorn worker so the process-local cache is shared. The selected default is native inference plus caching, with batching off. The HTTP measurements are local comparisons, not production capacity guarantees.
+
+| Setting | Default |
+|---|---:|
+| Cache enabled | `PREDICTION_CACHE_ENABLED=1` |
+| Cache capacity / lifetime | 1,024 entries / 300 seconds |
+| Dynamic batching | `DYNAMIC_BATCHING_ENABLED=0` |
+| Optional batch size / queue capacity | 16 rows / 256 requests |
+| Compose Uvicorn workers | 1 |
+
+### Superseded approach
+
+An earlier Milestone 3 attempt trained `models/optimized_xgb_pipeline.pkl` with domain feature engineering and a `log1p(SalePrice)` target, then served it through a scikit-learn pipeline. That artifact is retained only because `model_training/benchmark_models.py` compares it with the frozen Phase 2 pipeline and the current native export; the saved comparison is in `benchmarks/model_benchmark.json`. It is not loaded by the API, is not rebuilt by deployment, and is not the current default. Its slower inference and the added preprocessing work motivated the native runtime redesign. The old training, model-family, notebook, and PDF-builder files are not part of the current workflow.
+
+### Deployment limits
+
+The amd64 Linux image uses CPU-only XGBoost and runtime-only dependencies. Compose configuration was checked, but a Docker engine was unavailable, so image build and container execution remain unverified.
 
 ---
-
 ## Related docs
 
 - [README.md](README.md) — project overview, file map, and how to run
