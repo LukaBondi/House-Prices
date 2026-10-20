@@ -1,0 +1,312 @@
+{
+  "status": "passed",
+  "health": "ok",
+  "schema": "ok",
+  "prediction": "ok",
+  "request_id": "2e0b4091-7900-4a99-b162-01e9b1e1320f",
+  "model_version": "bootstrap-4e605ea450b0",
+  "audit_total_before": 0,
+  "audit_total_after": 1,
+  "frontend_nginx": "ok",
+  "public_admin_route": "denied",
+  "request_events": {
+    "malformed_status": 422,
+    "malformed_request_id": "1fd7fe7a-441c-4cca-a677-b5ef0ea123a3",
+    "cache_hit_delta": 32,
+    "concurrent_cache_miss_delta": 1,
+    "concurrent_cache_hit_delta": 31,
+    "concurrent_cache_reused_after_miss": 31,
+    "coalesced_delta": 0,
+    "concurrent_group": 1,
+    "successful_request_attributions": [
+      {
+        "request_id": "140c998e-1193-40e7-a407-010060a588fe",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "768342df-f61f-4093-ac48-c55e86af00bd",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "1596d0a8-8446-40e7-b33f-f3744866f2ac",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "520cdc15-834b-4ccb-87f7-9c3b754e50f4",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "671906fb-d32c-4c77-93e6-ecdbfe68a69e",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "2841674c-3f24-4585-9941-9643760bac13",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "ab20e53d-f0a8-4e75-b90b-10584bfe808b",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "f7fc6766-3c63-41c0-8abe-46079f284fcb",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "9eb05404-6aa3-48f0-93fb-eadab3155be5",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "9d01ead9-a32b-4538-b26c-52ce947fbd38",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "98564861-eae0-4aa3-9414-a25dc3da56fa",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "2bb20239-de9d-4e20-b355-321d0810e89b",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "d086d22d-d3a6-4a7f-84cf-b8e91e903347",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "2ddf6b77-dc4b-4b3f-a6be-dca3e9e35650",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "fdbcab8b-eae2-4175-9369-1bc4188fcfdd",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "b96efc75-4e0d-41f8-a73a-93688cbd0483",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "334d1e90-5aa2-4999-a0bb-8e2c540e9a78",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "3c39d4a1-0cc4-43e4-bc18-cbdfc5c287c8",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "39d23bc9-e3ef-4960-bc21-f6654157c2a2",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "fe3572ca-5f20-4c67-aae2-fd698a34db64",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "fe0d817d-ee7d-4807-977a-3265d6550548",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "61a84b17-e379-4ecf-a93a-0990b2c3a7a1",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "130deb2f-d132-4c48-bed7-a48b47414617",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "c0bcfac9-a7da-4aa7-86df-b14d809f3376",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "13c74445-51d6-4ab0-989b-127e2d297b4f",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "57e0f114-80c7-46ad-b282-ae2b85d3bbe5",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "afad51c5-6759-4f0b-922f-24097f13ae68",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "e380042e-1a94-48ff-9414-43e9e266311e",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "f4b05459-4828-4395-8b0a-706b7696e1a0",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "660dfbd6-7932-400c-a4bd-159ea7add953",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "3c29bb0d-2538-4584-a097-145d670a48a9",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "dbaacdac-7008-4156-9344-3f17611f7045",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "68f50fef-0ab9-4839-a1c4-5c01fa6aab6f",
+        "model_version": "bootstrap-4e605ea450b0"
+      },
+      {
+        "request_id": "f9539b11-2718-4127-b6e6-fe93fa6b57a4",
+        "model_version": "bootstrap-4e605ea450b0"
+      }
+    ],
+    "persisted_request_rows_verified": true,
+    "audit_total_before": 1,
+    "audit_total_after": 36
+  },
+  "delayed_labels_imported": 40,
+  "workload_run_id": "smoke-6a2dd70db51e4e9bb5ce71d3dc4e78bd-adapt",
+  "imported_source_ids": [
+    30,
+    44,
+    71,
+    79,
+    102,
+    116,
+    169,
+    185,
+    204,
+    260,
+    271,
+    275,
+    352,
+    399,
+    423,
+    428,
+    491,
+    495,
+    586,
+    591,
+    747,
+    766,
+    856,
+    899,
+    917,
+    991,
+    995,
+    1033,
+    1034,
+    1079,
+    1102,
+    1106,
+    1121,
+    1135,
+    1139,
+    1174,
+    1300,
+    1348,
+    1393,
+    1398
+  ],
+  "timed_retraining": {
+    "status": "rejected",
+    "run_id": "0306a8cc-e89b-47c3-abc9-9c91239cf421",
+    "started_at": 1791139755.5193155,
+    "completed_at": 1791139755.9624705,
+    "label_count": 40,
+    "eligible_source_ids": [
+      30,
+      44,
+      71,
+      79,
+      102,
+      116,
+      169,
+      185,
+      204,
+      260,
+      271,
+      275,
+      352,
+      399,
+      423,
+      428,
+      491,
+      495,
+      586,
+      591,
+      747,
+      766,
+      856,
+      899,
+      917,
+      991,
+      995,
+      1033,
+      1034,
+      1079,
+      1102,
+      1106,
+      1121,
+      1135,
+      1139,
+      1174,
+      1300,
+      1348,
+      1393,
+      1398
+    ],
+    "new_source_ids": [
+      30,
+      44,
+      71,
+      79,
+      102,
+      116,
+      169,
+      185,
+      204,
+      260,
+      271,
+      275,
+      352,
+      399,
+      423,
+      428,
+      491,
+      495,
+      586,
+      591,
+      747,
+      766,
+      856,
+      899,
+      917,
+      991,
+      995,
+      1033,
+      1034,
+      1079,
+      1102,
+      1106,
+      1121,
+      1135,
+      1139,
+      1174,
+      1300,
+      1348,
+      1393,
+      1398
+    ]
+  },
+  "promotion_fixture": {
+    "status": "committed",
+    "active_version": "ci-fixture-50e1187bf7702144",
+    "activation_id": "c06fc262-9ab4-4ab2-8819-7506a1540e59",
+    "fixture": "same frozen model bytes; activation path only; no performance claim"
+  },
+  "persisted_request_uuid": "2e0b4091-7900-4a99-b162-01e9b1e1320f",
+  "persisted_labels": 40,
+  "state_pointer": {
+    "activation_id": "c06fc262-9ab4-4ab2-8819-7506a1540e59",
+    "previous_version": "bootstrap-4e605ea450b0",
+    "version": "ci-fixture-50e1187bf7702144"
+  },
+  "restart_persistence": "ok"
+}

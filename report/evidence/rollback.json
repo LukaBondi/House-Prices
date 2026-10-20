@@ -1,0 +1,18 @@
+{
+  "trainer_stopped": true,
+  "before": "ci-fixture-50e1187bf7702144",
+  "rollback": {
+    "activation_id": "28fea1f8-acec-46bf-b0cf-ebe4c0b679bf",
+    "status": "committed",
+    "active_version": "bootstrap-4e605ea450b0",
+    "idempotent": false
+  },
+  "after": "bootstrap-4e605ea450b0",
+  "stale_parent_status": 409,
+  "repeat": {
+    "activation_id": "28fea1f8-acec-46bf-b0cf-ebe4c0b679bf",
+    "status": "committed",
+    "active_version": "bootstrap-4e605ea450b0",
+    "idempotent": true
+  }
+}

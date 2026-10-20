@@ -1,0 +1,1 @@
+{"python": "3.12.15", "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41", "fastapi": "0.142.2", "numpy": "2.5.3", "scipy": "1.18.1", "xgboost": "3.4.1", "uvicorn": "0.54.0", "sqlite": "3.46.1"}

@@ -1,0 +1,919 @@
+{
+  "as_of": 1791138559.922048,
+  "window": {
+    "minutes": 15,
+    "start": 1791137659.922048,
+    "end": 1791138559.922048
+  },
+  "requests": {
+    "total": 220,
+    "completed": 220,
+    "pending": 0,
+    "aborted": 0,
+    "logging_failed": 0,
+    "rate_per_minute": 14.666666666666666,
+    "distinct_inputs": 125
+  },
+  "latency": {
+    "handler_p50_ms": 3.171907999984569,
+    "handler_p95_ms": 118.04936234997281
+  },
+  "errors": {
+    "4xx": {
+      "count": 1,
+      "rate": 0.004545454545454545
+    },
+    "5xx": {
+      "count": 0,
+      "rate": 0.0
+    }
+  },
+  "cache": {
+    "hits": 94,
+    "misses": 125,
+    "coalesced": 0
+  },
+  "logging": {
+    "enabled": true,
+    "healthy": true,
+    "failures": 0,
+    "last_failure": null,
+    "last_failure_at": null,
+    "queue_depth": 0,
+    "admission_wait_ms_total": 6807.976,
+    "completion_wait_ms_total": 10342.477,
+    "admission_writes": 324,
+    "completion_writes": 323
+  },
+  "model": {
+    "version": "bootstrap-4e605ea450b0"
+  },
+  "labels": {
+    "count": 0,
+    "distinct_observations": 0
+  },
+  "retraining": {
+    "last_run": {
+      "run_id": "14138121-cf96-4d9f-a362-891d0bb17ea2",
+      "parent_version": "bootstrap-4e605ea450b0",
+      "status": "skipped",
+      "started_at": 1791138271.3805487,
+      "completed_at": 1791138271.3805487,
+      "metrics": null,
+      "details": {
+        "cutoff": 1791138271.3805487,
+        "eligible_ids": [],
+        "identity_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "label_count": 0,
+        "minimum_new_labels": 32,
+        "new_ids": [],
+        "reason": "insufficient_new_labels",
+        "snapshot_hash": "a7d04220ad47623fad17a7fcafb7e7fa4482b04bb4c03d5ccb1b35f7253df573"
+      }
+    }
+  },
+  "drift": {
+    "status": "advisory",
+    "reference_id": "e00c8d20796d5de79adf2a8204c443ab78e697c88352009d5835946485b8d8d2",
+    "dataset_sha256": "1e18addf81e5e4d347cc17ee6075bbe4a42b7fa26b9e5b063e8f692a5f929d41",
+    "sample_count": 219,
+    "distinct_inputs": 125,
+    "minimum_samples": 100,
+    "threshold": 0.1,
+    "features": {
+      "MSSubClass": {
+        "distance": 0.2692189711967211,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MSZoning": {
+        "distance": 0.1378401058133167,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LotFrontage": {
+        "distance": 0.36145346207260287,
+        "observed_count": 219,
+        "nonmissing_count": 190,
+        "missing_count": 29,
+        "missing_rate": 0.1324200913242009,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LotArea": {
+        "distance": 0.37228426994803177,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Street": {
+        "distance": 0.041405886505484685,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Alley": {
+        "distance": 0.07536596842455384,
+        "observed_count": 219,
+        "nonmissing_count": 6,
+        "missing_count": 213,
+        "missing_rate": 0.9726027397260274,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LotShape": {
+        "distance": 0.14542747093550934,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LandContour": {
+        "distance": 0.08226087266591339,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Utilities": {
+        "distance": 0.020693342854107004,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LotConfig": {
+        "distance": 0.10588937101639538,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LandSlope": {
+        "distance": 0.07290876667966574,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Neighborhood": {
+        "distance": 0.45018581473567115,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Condition1": {
+        "distance": 0.13632757834845713,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Condition2": {
+        "distance": 0.07570865550645949,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BldgType": {
+        "distance": 0.09394321678889202,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "HouseStyle": {
+        "distance": 0.2552881921038548,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "OverallQual": {
+        "distance": 0.24736006048579923,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "OverallCond": {
+        "distance": 0.42516916119436826,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "YearBuilt": {
+        "distance": 0.3947037679347292,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "YearRemodAdd": {
+        "distance": 0.37017849604738656,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "RoofStyle": {
+        "distance": 0.33244968253334223,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "RoofMatl": {
+        "distance": 0.056972975886718236,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Exterior1st": {
+        "distance": 0.3578361204158464,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Exterior2nd": {
+        "distance": 0.36188077108587574,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MasVnrType": {
+        "distance": 0.15231565093771426,
+        "observed_count": 219,
+        "nonmissing_count": 56,
+        "missing_count": 163,
+        "missing_rate": 0.7442922374429224,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MasVnrArea": {
+        "distance": 0.16215257573750155,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "ExterQual": {
+        "distance": 0.13871305290186234,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "ExterCond": {
+        "distance": 0.06762809098944594,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Foundation": {
+        "distance": 0.255606095431624,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtQual": {
+        "distance": 0.19378587173786924,
+        "observed_count": 219,
+        "nonmissing_count": 216,
+        "missing_count": 3,
+        "missing_rate": 0.0136986301369863,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtCond": {
+        "distance": 0.07303783466896656,
+        "observed_count": 219,
+        "nonmissing_count": 216,
+        "missing_count": 3,
+        "missing_rate": 0.0136986301369863,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtExposure": {
+        "distance": 0.13705477208997335,
+        "observed_count": 219,
+        "nonmissing_count": 216,
+        "missing_count": 3,
+        "missing_rate": 0.0136986301369863,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtFinType1": {
+        "distance": 0.28975828196158965,
+        "observed_count": 219,
+        "nonmissing_count": 216,
+        "missing_count": 3,
+        "missing_rate": 0.0136986301369863,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtFinSF1": {
+        "distance": 0.40328989655975767,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtFinType2": {
+        "distance": 0.05032866408801982,
+        "observed_count": 219,
+        "nonmissing_count": 216,
+        "missing_count": 3,
+        "missing_rate": 0.0136986301369863,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtFinSF2": {
+        "distance": 0.029445549189919384,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtUnfSF": {
+        "distance": 0.39461588584617446,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "TotalBsmtSF": {
+        "distance": 0.4040404512536225,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Heating": {
+        "distance": 0.10809497052509197,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "HeatingQC": {
+        "distance": 0.25472780279842255,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "CentralAir": {
+        "distance": 0.06554638303563465,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Electrical": {
+        "distance": 0.13219184078484875,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "1stFlrSF": {
+        "distance": 0.39394382649446963,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "2ndFlrSF": {
+        "distance": 0.23559179530544275,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "LowQualFinSF": {
+        "distance": 0.0009085458218372857,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GrLivArea": {
+        "distance": 0.41219876853585924,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtFullBath": {
+        "distance": 0.13897944706744975,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BsmtHalfBath": {
+        "distance": 0.4200183108946907,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "FullBath": {
+        "distance": 0.19461394964033898,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "HalfBath": {
+        "distance": 0.19385499161358763,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "BedroomAbvGr": {
+        "distance": 0.18293599556351117,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "KitchenAbvGr": {
+        "distance": 0.03306406911874788,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "KitchenQual": {
+        "distance": 0.1774264749990389,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "TotRmsAbvGrd": {
+        "distance": 0.27616351745998025,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Functional": {
+        "distance": 0.09319150368075486,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Fireplaces": {
+        "distance": 0.19595457241899408,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "FireplaceQu": {
+        "distance": 0.20430367239126304,
+        "observed_count": 219,
+        "nonmissing_count": 67,
+        "missing_count": 152,
+        "missing_rate": 0.6940639269406392,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageType": {
+        "distance": 0.18426532328181863,
+        "observed_count": 219,
+        "nonmissing_count": 210,
+        "missing_count": 9,
+        "missing_rate": 0.0410958904109589,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageYrBlt": {
+        "distance": 0.4084113465462011,
+        "observed_count": 219,
+        "nonmissing_count": 210,
+        "missing_count": 9,
+        "missing_rate": 0.0410958904109589,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageFinish": {
+        "distance": 0.29704308156449044,
+        "observed_count": 219,
+        "nonmissing_count": 210,
+        "missing_count": 9,
+        "missing_rate": 0.0410958904109589,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageCars": {
+        "distance": 0.24349581076974833,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageArea": {
+        "distance": 0.38281566546697354,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageQual": {
+        "distance": 0.08800475115746866,
+        "observed_count": 219,
+        "nonmissing_count": 210,
+        "missing_count": 9,
+        "missing_rate": 0.0410958904109589,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "GarageCond": {
+        "distance": 0.0970601954326385,
+        "observed_count": 219,
+        "nonmissing_count": 210,
+        "missing_count": 9,
+        "missing_rate": 0.0410958904109589,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "PavedDrive": {
+        "distance": 0.09126765494165627,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "WoodDeckSF": {
+        "distance": 0.4212331872626531,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "OpenPorchSF": {
+        "distance": 0.20088036030104625,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "EnclosedPorch": {
+        "distance": 0.09545385978102808,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "3SsnPorch": {
+        "distance": 0.030048258823672503,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "ScreenPorch": {
+        "distance": 0.06513908150988656,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "PoolArea": {
+        "distance": 0.0034893665683380353,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "PoolQC": {
+        "distance": 0.04688147691877925,
+        "observed_count": 219,
+        "nonmissing_count": 1,
+        "missing_count": 218,
+        "missing_rate": 0.9954337899543378,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "Fence": {
+        "distance": 0.3905417905015887,
+        "observed_count": 219,
+        "nonmissing_count": 122,
+        "missing_count": 97,
+        "missing_rate": 0.4429223744292237,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MiscFeature": {
+        "distance": 0.05235665555076876,
+        "observed_count": 219,
+        "nonmissing_count": 6,
+        "missing_count": 213,
+        "missing_rate": 0.9726027397260274,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MiscVal": {
+        "distance": 0.02464180360032133,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "MoSold": {
+        "distance": 0.37816534875397484,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "YrSold": {
+        "distance": 0.30968372887164286,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "SaleType": {
+        "distance": 0.1550358692231042,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      },
+      "SaleCondition": {
+        "distance": 0.1323586658720369,
+        "observed_count": 219,
+        "nonmissing_count": 219,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unknown_count": 0,
+        "unknown_rate": 0.0,
+        "underflow_count": 0,
+        "overflow_count": 0
+      }
+    }
+  }
+}
