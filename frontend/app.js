@@ -50,7 +50,17 @@ function collectFeatures() {
 function fillForm(values) {
   Object.entries(values).forEach(([key, value]) => {
     const el = form.elements.namedItem(key);
-    if (el) el.value = value;
+    if (!el) return;
+    if (
+      el instanceof HTMLSelectElement &&
+      !Array.from(el.options).some((option) => option.value === String(value))
+    ) {
+      const option = document.createElement("option");
+      option.value = String(value);
+      option.textContent = String(value);
+      el.append(option);
+    }
+    el.value = value;
   });
 }
 

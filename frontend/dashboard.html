@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Operations dashboard | House Price Predictor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page dashboard-page">
+    <header class="hero">
+      <p class="eyebrow">Live service status</p>
+      <h1>Operations dashboard</h1>
+      <p class="lede">Request, logging, model, label, retraining, and input-shift health from the running service.</p>
+      <nav class="page-nav" aria-label="Project pages">
+        <a href="index.html">Prediction form</a>
+        <a href="dashboard.html" aria-current="page">Operations dashboard</a>
+      </nav>
+    </header>
+
+    <section class="panel dashboard-controls" aria-labelledby="controls-title">
+      <h2 id="controls-title">Monitoring window</h2>
+      <div class="control-row">
+        <label for="window-minutes">Time window</label>
+        <select id="window-minutes" name="window-minutes" aria-controls="monitoring-panels">
+          <option value="15" selected>Last 15 minutes</option>
+          <option value="60">Last 60 minutes</option>
+          <option value="1440">Last 24 hours</option>
+        </select>
+        <button type="button" id="refresh-dashboard" class="secondary">Refresh now</button>
+        <span id="refresh-status" class="muted" role="status" aria-live="polite" aria-atomic="true">Connecting to monitoring API…</span>
+      </div>
+      <p class="health-indicator" id="api-health" role="status" aria-live="polite">Checking API readiness…</p>
+      <p class="panel-note">Refreshes automatically every five seconds. API health polling is excluded from prediction counts and drift.</p>
+      <p id="dashboard-error" class="error-message" role="alert" hidden></p>
+    </section>
+
+    <div id="monitoring-panels" aria-busy="true">
+      <section class="metric-grid" aria-label="Service summary">
+        <article class="panel metric-card">
+          <h2>Prediction requests</h2>
+          <p class="metric-value" id="request-total">Unavailable</p>
+          <p class="metric-detail" id="request-breakdown">Completed, pending, and aborted counts unavailable</p>
+          <p class="metric-detail">Logging failures are included in completed responses and 5xx errors.</p>
+          <p class="metric-detail" id="request-rate">Request rate unavailable</p>
+          <p class="empty-state" id="traffic-empty" hidden></p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Handler latency</h2>
+          <p class="metric-value" id="latency-p50">Unavailable</p>
+          <p class="metric-detail" id="latency-p95">p95 unavailable</p>
+          <p class="panel-note">Server handler time includes admission wait and ends before the final audit commit. It is not browser or network round-trip time.</p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Completed response errors</h2>
+          <p class="metric-value" id="error-4xx">4xx unavailable</p>
+          <p class="metric-detail" id="error-5xx">5xx unavailable</p>
+          <p class="panel-note">Rates use completed prediction responses as the denominator. Pending and aborted requests are shown separately.</p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Prediction cache</h2>
+          <p class="metric-value" id="cache-hits">Hits unavailable</p>
+          <p class="metric-detail" id="cache-breakdown">Misses and coalesced requests unavailable</p>
+        </article>
+      </section>
+
+      <section class="metric-grid" aria-label="Persistence and model status">
+        <article class="panel metric-card">
+          <h2>Request logging</h2>
+          <p class="metric-value" id="logging-health">Unavailable</p>
+          <p class="metric-detail" id="logging-detail">Logging status unavailable</p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Active model</h2>
+          <p class="metric-value version-value" id="model-version">Unavailable</p>
+          <p class="metric-detail">Version captured for the current serving process</p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Delayed label coverage</h2>
+          <p class="metric-value" id="label-count">Unavailable</p>
+          <p class="metric-detail" id="label-detail">Distinct eligible observations unavailable</p>
+        </article>
+        <article class="panel metric-card">
+          <h2>Latest retraining run</h2>
+          <p class="metric-value" id="retraining-status">Unavailable</p>
+          <p class="metric-detail" id="retraining-detail">Waiting for monitoring data.</p>
+        </article>
+      </section>
+
+      <section class="panel drift-panel" aria-labelledby="drift-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="drift-title">Input drift</h2>
+            <p class="panel-note">Advisory comparison with the fixed original-fit reference. Drift does not measure prediction accuracy.</p>
+          </div>
+          <p class="drift-status" id="drift-status">Waiting for monitoring data</p>
+        </div>
+        <div class="drift-summary" aria-label="Drift sample details">
+          <p id="drift-samples">Valid observations: unavailable</p>
+          <p id="drift-distinct">Distinct inputs: unavailable</p>
+          <p id="drift-reference">Reference: unavailable</p>
+          <p id="drift-threshold">Advisory threshold: unavailable</p>
+        </div>
+        <p class="empty-state" id="drift-empty" hidden></p>
+        <div class="table-scroll" role="region" aria-label="Top drifted features" tabindex="0">
+          <table>
+            <caption>Top 10 features by Jensen–Shannon distance, with missing and unknown input counts</caption>
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Distance</th>
+                <th scope="col">Observed</th>
+                <th scope="col">Missing</th>
+                <th scope="col">Unknown</th>
+              </tr>
+            </thead>
+            <tbody id="drift-rows">
+              <tr><td colspan="5" class="table-placeholder">Waiting for monitoring data…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer class="dashboard-footer">
+      <p>Summary as of <time id="summary-time">unavailable</time> · window <span id="summary-window">unavailable</span></p>
+      <p>UTC window bounds: <time id="summary-window-start">unavailable</time> to <time id="summary-window-end">unavailable</time></p>
+      <p>These panels use prediction-route events; opening or refreshing this page does not add prediction traffic.</p>
+    </footer>
+  </main>
+  <script src="config.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
