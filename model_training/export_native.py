@@ -69,17 +69,21 @@ def metadata_from_pipeline(pipeline: Any) -> dict[str, Any]:
     }
 
 
-def export() -> None:
+def export(output_path: str | Path | None = None) -> dict[str, Any]:
     if sha256(SOURCE) != EXPECTED_SOURCE_SHA256:
         raise RuntimeError("The frozen baseline model hash changed; refusing export")
+    explicit_output = output_path is not None
+    output_path = Path(output_path) if explicit_output else OUTPUT
+    if explicit_output and output_path.resolve() == OUTPUT.resolve():
+        raise ValueError("--output must not target the protected checked-in native archive")
     pipeline = joblib.load(SOURCE)
     metadata = metadata_from_pipeline(pipeline)
     if not metadata["sparse_output"]:
         raise RuntimeError("Expected the baseline preprocessing output to be sparse")
     metadata["xgboost_version"] = __import__("xgboost").__version__
     booster_bytes = bytes(pipeline.named_steps["regressor"].get_booster().save_raw(raw_format="ubj"))
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(OUTPUT, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, content in (
             ("metadata.json", json.dumps(metadata, separators=(",", ":"))),
             ("booster.ubj", booster_bytes),
@@ -89,7 +93,7 @@ def export() -> None:
             info._compresslevel = 9
             archive.writestr(info, content)
 
-    native = NativeModel(OUTPUT)
+    native = NativeModel(output_path)
     datasets = [ROOT / "dataset" / name for name in ("train.csv", "test.csv")]
     worst_abs = 0.0
     for path in datasets:
@@ -116,16 +120,23 @@ def export() -> None:
         raise AssertionError("Parity failed for partial, unknown, null, zero, or reordered rows")
     if [round(float(value), 2) for value in expected_edge] != [round(float(value), 2) for value in actual_edge]:
         raise AssertionError("Rounded-cent parity failed for edge cases")
-    print(json.dumps({
-        "artifact": str(OUTPUT),
-        "artifact_bytes": OUTPUT.stat().st_size,
+    result = {
+        "artifact": str(output_path),
+        "artifact_bytes": output_path.stat().st_size,
         "source_sha256": metadata["source_sha256"],
         "train_rows": 1460,
         "test_rows": 1459,
         "edge_rows": len(edge),
         "max_absolute_error": worst_abs,
-    }, indent=2))
+    }
+    print(json.dumps(result, indent=2))
+    return result
 
 
 if __name__ == "__main__":
-    export()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=None, help="Write parity archive to this path; defaults to the checked-in archive")
+    args = parser.parse_args()
+    export(args.output)
