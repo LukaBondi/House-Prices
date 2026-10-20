@@ -8,24 +8,24 @@ on:
 
 jobs:
   lint-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
       - name: Set up Node.js for dashboard behavior checks
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install project dependencies
         run: |
@@ -65,7 +65,7 @@ jobs:
           node --test tests/dashboard_behavior.test.cjs
 
   linux-compose-smoke:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       ADMIN_TOKEN: "${{ github.run_id }}-${{ github.run_attempt }}"
       RETRAIN_INTERVAL_SECONDS: "5"
@@ -73,10 +73,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload Docker smoke evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: linux-compose-smoke-${{ github.run_id }}
           path: |

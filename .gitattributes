@@ -1,1 +1,5 @@
 *.ipynb linguist-documentation=true
+
+# The frozen model and split manifest hash the schema's original CRLF bytes.
+# Preserve those bytes on every platform, including Linux CI and Docker builds.
+models/feature_schema.json text eol=crlf
