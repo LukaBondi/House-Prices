@@ -1,16 +1,50 @@
 services:
+  trainer-bootstrap:
+    image: house-prices-trainer:local
+    build:
+      context: .
+      dockerfile: model_training/Dockerfile
+    command:
+      - python
+      - -m
+      - model_training.bootstrap_registry
+      - --registry
+      - /artifacts
+      - --reference
+      - /app/models/house_prices_native.zip
+      - --manifest
+      - /artifacts/split_manifest.json
+      - --drift-reference
+      - /artifacts/drift_reference.json
+      - --schema
+      - /app/models/feature_schema.json
+    environment:
+      DATA_DIR: /data
+      DB_PATH: /data/requests.sqlite3
+      MODEL_REGISTRY_PATH: /artifacts
+      MODEL_STATE_PATH: /state
+      DRIFT_REFERENCE_PATH: /artifacts/drift_reference.json
+    volumes:
+      - model_artifacts:/artifacts
+    restart: "no"
+
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     ports:
-      - "8000:8000"
-    volumes:
-      - ./models/house_prices_native.zip:/app/models/house_prices_native.zip:ro
-      - ./models/feature_schema.json:/app/models/feature_schema.json:ro
+      - "127.0.0.1:8000:8000"
     environment:
       MODEL_PATH: /app/models/house_prices_native.zip
       SCHEMA_PATH: /app/models/feature_schema.json
+      DATA_DIR: /data
+      DB_PATH: /data/requests.sqlite3
+      MODEL_REGISTRY_PATH: /artifacts
+      MODEL_STATE_PATH: /state
+      DRIFT_REFERENCE_PATH: /artifacts/drift_reference.json
+      REQUEST_LOGGING_ENABLED: "1"
+      # Local demo fallback only. Set ADMIN_TOKEN in the shell or ignored .env for a private value.
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-local-demo-only-change-this-value}"
       WEB_CONCURRENCY: "1"
       PREDICTION_CACHE_ENABLED: "1"
       PREDICTION_CACHE_MAX_ENTRIES: "1024"
@@ -20,18 +54,63 @@ services:
       BATCH_MAX_DELAY_MS: "0"
       BATCH_QUEUE_MAX_SIZE: "256"
       INFERENCE_WORKERS: "1"
+    volumes:
+      - request_data:/data
+      - model_artifacts:/artifacts:ro
+      - serving_state:/state
+    depends_on:
+      trainer-bootstrap:
+        condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
-      interval: 10s
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  trainer:
+    image: house-prices-trainer:local
+    command:
+      - python
+      - -m
+      - model_training.retrain
+      - --interval
+      - "${RETRAIN_INTERVAL_SECONDS:-3600}"
+    environment:
+      DATA_DIR: /data
+      DB_PATH: /data/requests.sqlite3
+      MODEL_REGISTRY_PATH: /artifacts
+      MODEL_STATE_PATH: /state
+      DRIFT_REFERENCE_PATH: /artifacts/drift_reference.json
+      API_BASE_URL: http://backend:8000
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-local-demo-only-change-this-value}"
+      TRAINER_TREE_GROWTH_CAP: "600"
+    volumes:
+      - request_data:/data
+      - model_artifacts:/artifacts
+      - serving_state:/state:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
 
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
     ports:
-      - "3000:80"
+      - "127.0.0.1:3000:80"
     depends_on:
       backend:
         condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  request_data:
+  model_artifacts:
+  serving_state:

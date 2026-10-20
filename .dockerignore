@@ -5,7 +5,15 @@ __pycache__
 **/__pycache__
 **/*.pyc
 dataset/
+!dataset/
+!dataset/train.csv
+!dataset/test.csv
+!dataset/split_manifest.json
 model_training/
+!model_training/
+!model_training/*.py
+!model_training/Dockerfile
+!model_training/requirements-trainer.txt
 tests/
 benchmarks/
 report/
@@ -13,5 +21,7 @@ output/
 tmp/
 *.ipynb
 models/*
+!models/baseline_xgb_pipeline.pkl
 !models/house_prices_native.zip
 !models/feature_schema.json
+!models/drift_reference.json

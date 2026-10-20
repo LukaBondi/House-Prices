@@ -15,6 +15,12 @@ COPY models/feature_schema.json /app/models/feature_schema.json
 
 ENV MODEL_PATH=/app/models/house_prices_native.zip
 ENV SCHEMA_PATH=/app/models/feature_schema.json
+ENV DATA_DIR=/data
+ENV DB_PATH=/data/requests.sqlite3
+ENV MODEL_REGISTRY_PATH=/artifacts
+ENV MODEL_STATE_PATH=/state
+ENV DRIFT_REFERENCE_PATH=/artifacts/drift_reference.json
+ENV REQUEST_LOGGING_ENABLED=1
 ENV WEB_CONCURRENCY=1
 ENV PREDICTION_CACHE_ENABLED=1
 ENV PREDICTION_CACHE_MAX_ENTRIES=1024
@@ -28,4 +34,4 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "exec uvicorn backend.app:app --host 0.0.0.0 --port 8000 --workers ${WEB_CONCURRENCY:-1}"]
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
