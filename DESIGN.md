@@ -240,3 +240,116 @@ The amd64 Linux image uses CPU-only XGBoost and runtime-only dependencies. Compo
 ## Related docs
 
 - [README.md](README.md) — project overview, file map, and how to run
+
+---
+
+## Milestone 4 — Audited continual learning and guarded serving (2026-10-05)
+
+The user authorized implementation of the continual-learning plan. This milestone adds durable request events, a static operations dashboard, verified delayed labels, scheduled champion/challenger evaluation, immutable model versions, and backend-owned activation. It protects the frozen baseline archive and feature schema; a candidate that passes the gate may change the active booster version.
+
+### Data and evaluation boundaries
+
+The source training CSV is pinned by SHA-256 1e18addf81e5e4d347cc17ee6075bbe4a42b7fa26b9e5b063e8f692a5f929d41. The deterministic split manifest identifies 1,168 original fit rows, 146 adaptation rows, 73 promotion-gate rows, and 73 final-audit rows. The reference histogram is built only from the 1,168 original fit rows. The native baseline archive and schema remain frozen and hash-checked.
+
+The split is a provenance and eligibility boundary, not a claim of untouched validation data. The 73 gate rows and the earlier 292-row holdout were already used in prior project evaluation. The gate is reused only to apply a fixed paired policy. The final audit was evaluated once after selection; it did not affect model choice and is descriptive rather than fresh external accuracy evidence.
+
+Only an unchanged adaptation example can become training data. A private trainer-side importer checks the source dataset hash before reading the target, split membership, exact canonical feature fingerprint, successful persisted prediction, request completion, and configured label delay. Synthetic drift, changed feature records, repeated observations, previous fit rows, gate rows, audit rows, failed requests, and predictions themselves are never ground truth.
+
+### Request path and monitoring
+
+~~~mermaid
+flowchart LR
+    Browser[Browser or HTTP client] --> Form[Static prediction form]
+    Form -->|POST /predict| API[FastAPI, one Uvicorn worker]
+    API --> Admit[Durable request admission]
+    Admit --> DB[(SQLite WAL request and label store)]
+    API --> Snapshot[Capture model and schema version]
+    Snapshot --> Cache[Version-qualified TTL/LRU cache]
+    Cache -->|hit or coalesced result| Reply[Prepared response]
+    Cache -->|miss| Native[Native preprocessing and UBJ prediction]
+    Native --> Reply
+    Reply --> Complete[Durable completion audit]
+    Complete --> Browser
+    Dashboard[Operations dashboard] -->|summary window| API
+~~~
+
+Every HTTP route is audited with a server-generated UUID. Prediction bodies are bounded to 65,536 bytes; malformed and oversized inputs retain bounded parse context. Admission and completion writes are acknowledged. When logging cannot be acknowledged, the API returns a bounded 503 and marks the outcome as logging-failed where persistence is possible. A request row records the prepared HTTP status, not proof that the client received the response. A crash may leave an admitted request pending.
+
+The event writer is bounded (256 queued commands, 250 ms acknowledgement budget) and uses the backend-owned SQLite schema. Completed-response error rates include logged 4xx/5xx outcomes; pending and aborted arrivals are separate. The monitoring summary covers only prediction requests, so health checks, the dashboard's own polling, and admin calls do not inflate prediction volume. Handler latency is the server-side measurement with its own audit timing boundary. It is distinct from end-to-end client latency, which includes HTTP, network, and durable audit acknowledgements.
+
+The dashboard polls every five seconds and supports 15-minute, 60-minute, and 24-hour UTC windows. It distinguishes absent fields, explicit null values, empty traffic, and insufficient drift samples. It shows request counts, latency, completed-response errors, cache outcomes, logging failures, active version, delayed labels, latest training outcome, drift, and per-feature missing/unknown counts. Stale responses are discarded after window changes; the latest requested refresh is queued.
+
+The immutable drift reference uses base-2 Jensen-Shannon distance, the square root of Jensen-Shannon divergence. Numeric and categorical buckets include missing values and out-of-range or unknown values. A score is advisory only: at least 100 valid prediction observations are required and the default threshold is 0.10. Drift is an input-distribution signal, not proof of target error or model degradation.
+
+
+### Delayed labels, retraining, and serving versions
+
+~~~mermaid
+flowchart LR
+    Workload[Adaptation workload over HTTP] --> Audit[Completed request and source provenance]
+    Audit --> Delay[Private truth file waits for configured delay]
+    Delay --> Import[Trainer verifies hash, row, features, completion and delay]
+    Import --> Labels[(Verified labels in SQLite)]
+    Labels --> Cutoff[Timed trainer snapshots eligible rows at fixed cutoff]
+    Cutoff --> Lease[Owned trainer lease and immutable snapshot hash]
+    Lease --> Candidate[Continue private booster copy]
+    Candidate --> Gate{Paired 73-row gate}
+    Gate -->|Reject, skip, or fail| Run[Record terminal run verdict]
+    Gate -->|At least 1% RMSLE gain and RMSE no worse| Registry[Publish immutable version and manifest]
+    Registry --> API[Token-protected activation with parent CAS and lease fence]
+    API --> Pointer[Backend atomically publishes current.json]
+    Pointer --> Active[New requests capture the new serving snapshot]
+    Run --> Dashboard[Dashboard shows outcome and active version]
+    Active --> Dashboard
+~~~
+
+The scheduler is time-triggered. It needs at least 32 new verified observations and a cooldown after a rejected snapshot. The trainer fixes a label-availability cutoff, deduplicates observations, records the eligible and new IDs with the snapshot hash, and trains a private booster copy. It keeps the original preprocessing coordinates and model objective, adds 25 rounds at learning rate 0.01, and respects a cumulative tree-growth cap of 600 by default.
+
+A candidate must produce finite nonnegative predictions, improve RMSLE by at least 1% relative to the champion on the same 73 gate rows, and have RMSE no worse than the champion. Export, load, schema/preprocessing, and representative-edge checks also apply. A candidate can therefore be rejected even when labels are present. The evaluation threshold is a fixed operating policy on a small reused gate, not statistical proof. The system never degrades a real incumbent to create a promotion.
+
+Training owns immutable registry version directories and manifests. The API alone owns the serving pointer. Candidate activation requires an expected-parent compare-and-swap, matching candidate manifest, and a live trainer-run lease fence; the API checks the lease while the publication transaction is protected. Pointer replacement is atomic and reconciled against activation intent after restart. An activation whose outcome remains unknown blocks new trainer runs until reconciliation. Lease heartbeats check current ownership using a fresh clock value while holding the database update lock. Repeating an already committed activation returns that activation's historical result even if a later activation has changed the current pointer; the current model must be read separately from health or the pointer. Rollback targets the previous served version or the frozen bootstrap, using the same checked API path. Each in-flight prediction retains the model/schema snapshot it captured; version-qualified cache keys prevent results crossing activations.
+
+### Deployment choices and remaining bottlenecks
+
+Compose uses a one-shot trainer-image bootstrap, the API, a scheduled trainer, and nginx. Named volumes persist request data, immutable artifacts, and backend serving state. The API mounts artifacts read-only; the trainer writes immutable versions and reads serving state but does not publish current.json. The shared ADMIN_TOKEN is required by trusted activation calls, and admin paths are not exposed through nginx. The API is one Uvicorn worker, the exact-input cache is on, and dynamic batching remains off. Local runtime state defaults outside the synced repository.
+
+SQLite is appropriate for this one-host demonstration but has one serialized writer and a shared local file. The API is a single process because cache/coalescing state is process-local. A growing event history, database-writer pressure, prediction concurrency, training CPU contention, label quality, and dashboard aggregation are the main constraints.
+
+For roughly 100 times the request volume, first establish an SLO and repeat the workload on the intended hardware. Then move event persistence to PostgreSQL and a durable ingestion/outbox path, run API replicas behind a load balancer, and move training to isolated workers with explicit CPU/memory limits. Publish immutable artifacts to remote object storage and coordinate activations through a versioned control plane, retaining parent checks and per-request snapshots. Either use a shared cache keyed by model version or document the consistency/cost of replica-local caches. Pre-aggregate monitoring windows, set explicit retention, and validate with fresh temporal labels before rollout. These are scaling proposals; the current implementation is not a 100x capacity test.
+
+| Current constraint | Implemented protection | 100x direction |
+|---|---|---|
+| SQLite write serialization and history growth | Bounded acknowledged writer, health visibility, explicit archive/checkpoint helpers | PostgreSQL plus durable event ingestion and retention |
+| Single API process and process-local cache | One captured model version per request; bounded cache and queue behavior | Multiple API replicas with coordinated version rollout and measured shared/local cache |
+| Training competes for CPU and shared database | Separate trainer container, singleton lease, fixed snapshot cutoff and tree cap | Isolated training workers, resource quotas, queued jobs and object-backed immutable registry |
+| Sparse, delayed, or incorrect labels | Hash-pinned source rows, private truth import, delay/cutoff and minimum count | Fresh temporal labels, label-quality monitoring, stronger source integration |
+| Small, historically evaluated promotion gate | Fixed paired RMSLE/RMSE policy and one reserved descriptive audit | Fresh temporal or external holdout, canary/shadow evaluation |
+| Lost activation acknowledgements or pointer/database split | Idempotency ID, parent CAS, atomic API-owned pointer and restart reconciliation | Replicated control plane, canary rollout and automated rollback |
+| Repeated dashboard queries on event history | Indexed bounded windows and small static dashboard | Materialized summaries and separate monitoring storage |
+
+
+### October 5 measurement and verification record
+
+The matched logging measurement is stored in [benchmarks/logging_overhead.json](benchmarks/logging_overhead.json). It contains 24 fresh-process cases: two workloads (unique and repeated), two concurrency levels (1 and 8), three trials, and logging on/off. Each case requested 160 predictions, for 3,840 calls total and zero errors. Every case used the same dataset and native model, one Uvicorn worker, cache enabled, and dynamic batching disabled.
+
+The client figures are medians across the three trials. Values are logging on / logging off:
+
+| Workload | Concurrency | Client p50 (ms) | Client p95 (ms) | Successful requests/s |
+|---|---:|---:|---:|---:|
+| Unique | 1 | 4.24 / 2.15 | 7.66 / 3.25 | 209.17 / 436.00 |
+| Unique | 8 | 15.91 / 10.23 | 24.95 / 16.89 | 455.27 / 729.17 |
+| Repeated | 1 | 6.51 / 1.09 | 9.71 / 2.42 | 140.57 / 754.02 |
+| Repeated | 8 | 36.85 / 5.01 | 46.45 / 22.61 | 208.32 / 848.63 |
+
+The cost is visible in this workload, particularly on repeated requests where cached inference is short but both durable audit acknowledgements remain. These are client round-trip measurements, including HTTP and audit writes. The benchmark does not contain per-request handler percentiles; dashboard handler latency has a different server-side boundary. Do not compare the two directly or treat these results as a capacity guarantee.
+
+The benchmark environment was Windows 11 build 26300 with Python 3.12.14. It used dataset SHA-256 1e18addf81e5e4d347cc17ee6075bbe4a42b7fa26b9e5b063e8f692a5f929d41 and native archive SHA-256 4e605ea450b01531142398e273729f326df625ae21b8f0a5235f030382721db4. The Docker stack was paused during the measurement; these values are not container/Linux latency.
+
+The protected exporter produced exact parity on 1,460 train rows, 1,459 test rows, and 3 edge records with a maximum absolute difference of zero; the frozen archive was preserved. The strict split-manifest check and root global Ruff check passed in the recorded verification run. Linux images built and started under an isolated Compose project. Real HTTP baseline and shifted traffic plus browser dashboard states were checked: the shifted run raised Neighborhood distance from 0.4502 to 0.5155 and exposed 40 missing and 40 unknown values, with no labels created. The dashboard also rendered empty traffic, insufficient samples, a selected 60-minute window, populated drift, and monitoring unavailability while the stack was paused.
+
+The final combined suite passed 100 tests with six deprecation warnings in 39.16 seconds, and global Ruff passed. The protected exporter matched all 1,460 train rows, 1,459 test rows, and three edge cases exactly while preserving the frozen source archive. A fresh isolated Linux Compose project completed the real HTTP smoke: 40 delayed labels were imported, the real candidate was correctly rejected by the 1% RMSLE gate, the explicitly tagged same-model fixture committed activation, and exact request UUID, imported label IDs, model version, and pointer state survived backend restart. A separate rollback check returned the serving pointer to the frozen bootstrap; repeating the same activation ID returned its committed result, and a stale expected parent received HTTP 409. The final audit ran once after selection and was not used for model selection. In the browser, API unavailability showed a stale-data banner that cleared after recovery; the recovered dashboard showed the bootstrap and all 40 imported labels. The form loaded the schema sample with `Sawyer` selected and successfully displayed a $143,950 prediction. Remote GitHub Actions was not run.
+
+A private retrospective feasibility check used the first 32 adaptation labels with the 1,168 fit rows and the fixed 73-row gate. RMSLE changed from 0.1527863 to 0.1509785 (1.183% relative gain), and RMSE changed from $24,598.10 to $24,510.42. This did not use live HTTP-delayed truth, publish a candidate, or activate a model; the reused small gate is not independent evidence of generalization. In the live run, the champion/challenger RMSLE values were 0.1527862786/0.1517689782, a 0.6658% relative gain below policy; RMSE improved from $24,598.10 to $24,548.88. The live candidate was not promoted, and the frozen bootstrap remains selected after the rollback check. The final audit then recorded RMSLE 0.1385911, MAE $16,402.36, and RMSE $24,117.92 on 73 rows, with no role in selection; these rows were part of the historically evaluated holdout.
+
+The proposed 100x architecture is a roadmap, not a measured result. The Compose demonstration flow was exercised; no presentation is claimed here. Full evidence is indexed in [report/evidence](report/evidence/README.md).
+
